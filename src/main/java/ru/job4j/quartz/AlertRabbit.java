@@ -5,6 +5,11 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import static org.quartz.JobBuilder.*;
@@ -14,23 +19,41 @@ import static org.quartz.SimpleScheduleBuilder.*;
 public class AlertRabbit {
     public static void main(String[] args) {
         Properties properties = getProp("rabbit.properties");
-        try {
-            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-            scheduler.start();
-            JobDetail job = newJob(Rabbit.class).build();
-            SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(Integer.parseInt(properties.getProperty("rabbit.interval")))
-                    .repeatForever();
-            Trigger trigger = newTrigger()
-                    .startNow()
-                    .withSchedule(times)
-                    .build();
-            scheduler.scheduleJob(job, trigger);
-        } catch (SchedulerException se) {
-            se.printStackTrace();
+        try (Connection connection = createConnection(properties.getProperty("url"),
+                properties.getProperty("login"),
+                properties.getProperty("password"),
+                properties.getProperty("driver"))) {
+            try {
+                Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+                scheduler.start();
+                JobDataMap data = new JobDataMap();
+                data.put("cn", connection);
+                data.put("format", DateTimeFormatter.ofPattern(properties.getProperty("format")));
+                JobDetail job = newJob(Rabbit.class)
+                        .usingJobData(data)
+                        .build();
+                SimpleScheduleBuilder times = simpleSchedule()
+                        .withIntervalInMilliseconds(5000)
+                        .repeatForever();
+                Trigger trigger = newTrigger()
+                        .startNow()
+                        .withSchedule(times)
+                        .build();
+                scheduler.scheduleJob(job, trigger);
+                Thread.sleep(10000);
+                scheduler.shutdown();
+            } catch (Exception se) {
+                se.printStackTrace();
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
+    private static Connection createConnection(String url, String login, String password, String driver) throws ClassNotFoundException, SQLException {
+        Class.forName(driver);
+        return DriverManager.getConnection(url, login, password);
+    }
     private static Properties getProp(String property) {
         Properties properties = new Properties();
         try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream(property)) {
@@ -42,9 +65,21 @@ public class AlertRabbit {
     }
 
     public static class Rabbit implements Job {
+        public Rabbit() {
+            System.out.println(hashCode());
+        }
+
         @Override
         public void execute(JobExecutionContext context) {
-            System.out.println("Rabbit runs here ...");
+            Connection connection = (Connection) context.getJobDetail().getJobDataMap().get("cn");
+            DateTimeFormatter formatter = (DateTimeFormatter) context.getJobDetail().getJobDataMap().get("format");
+            try (PreparedStatement preparedStatement = connection.prepareStatement("insert into rabbit(created_date) values (?)")) {
+                System.out.println(LocalDateTime.now().format(formatter));
+                preparedStatement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now().format(formatter)));
+                preparedStatement.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
