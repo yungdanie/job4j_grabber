@@ -17,21 +17,18 @@ import static org.quartz.SimpleScheduleBuilder.*;
 public class AlertRabbit {
     public static void main(String[] args) {
         Properties properties = getProp("rabbit.properties");
-        try (Connection connection = createConnection(properties.getProperty("url"),
-                properties.getProperty("login"),
-                properties.getProperty("password"),
-                properties.getProperty("driver"))) {
+        try (Connection connection = createConnection(properties)) {
             try {
                 Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
                 scheduler.start();
                 JobDataMap data = new JobDataMap();
                 data.put("cn", connection);
-                data.put("format", DateTimeFormatter.ofPattern(properties.getProperty("format")));
                 JobDetail job = newJob(Rabbit.class)
                         .usingJobData(data)
                         .build();
                 SimpleScheduleBuilder times = simpleSchedule()
-                        .withIntervalInMilliseconds(5000)
+                        .withIntervalInMilliseconds
+                                (Integer.parseInt(properties.getProperty("rabbit.interval")))
                         .repeatForever();
                 Trigger trigger = newTrigger()
                         .startNow()
@@ -48,9 +45,12 @@ public class AlertRabbit {
         }
     }
 
-    private static Connection createConnection(String url, String login, String password, String driver) throws ClassNotFoundException, SQLException {
-        Class.forName(driver);
-        return DriverManager.getConnection(url, login, password);
+    private static Connection createConnection(Properties properties)
+            throws ClassNotFoundException, SQLException {
+        Class.forName(properties.getProperty("driver"));
+        return DriverManager.getConnection(properties.getProperty("url"),
+                properties.getProperty("login"),
+                properties.getProperty("password"));
     }
     private static Properties getProp(String property) {
         Properties properties = new Properties();
@@ -69,11 +69,12 @@ public class AlertRabbit {
 
         @Override
         public void execute(JobExecutionContext context) {
-            Connection connection = (Connection) context.getJobDetail().getJobDataMap().get("cn");
-            DateTimeFormatter formatter = (DateTimeFormatter) context.getJobDetail().getJobDataMap().get("format");
-            try (PreparedStatement preparedStatement = connection.prepareStatement("insert into rabbit(created_date) values (?)")) {
-                System.out.println(LocalDateTime.now().format(formatter));
-                preparedStatement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now().format(formatter)));
+            Connection connection = (Connection)
+                    context.getJobDetail().getJobDataMap().get("cn");
+            try (PreparedStatement preparedStatement =
+                         connection.prepareStatement("insert into rabbit(created_date) values (?)")) {
+                preparedStatement.setTimestamp(1,
+                        Timestamp.valueOf(LocalDateTime.now()));
                 preparedStatement.execute();
             } catch (SQLException e) {
                 e.printStackTrace();
