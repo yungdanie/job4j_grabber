@@ -5,8 +5,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.job4j.grabber.utils.HabrCareerDateTimeParser;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,7 @@ public class HabrCareerParse {
     private static final String PAGE_LINK = String.format("%s/vacancies/java_developer", SOURCE_LINK);
 
     public static void main(String[] args) throws IOException {
+        HabrCareerDateTimeParser parser = new HabrCareerDateTimeParser();
         Connection connection = Jsoup.connect(PAGE_LINK);
         Document document = connection.get();
         List<Vacancy> vacancyList = new ArrayList<>();
@@ -27,7 +30,10 @@ public class HabrCareerParse {
             Element titleElement = row.selectFirst(".vacancy-card__title");
             Element linkElement = titleElement.child(0);
             String vacancyName = titleElement.text();
-            vacancyList.add(new Vacancy(vacancyName, String.format("%s%s", SOURCE_LINK, linkElement.attr("href")), data));
+            vacancyList.add(new Vacancy
+                    (vacancyName,
+                            String.format("%s%s", SOURCE_LINK, linkElement.attr("href")),
+                            parser.parse(data)));
         });
         vacancyList.forEach(System.out::println);
     }
@@ -35,7 +41,7 @@ public class HabrCareerParse {
     private static class Vacancy {
         private String vacancyName;
         private String vacancyLink;
-        private String vacancyDate;
+        private LocalDateTime vacancyDate;
 
         @Override
         public String toString() {
@@ -46,7 +52,7 @@ public class HabrCareerParse {
                     '}';
         }
 
-        public Vacancy(String vacancyName, String vacancyLink, String vacancyDate) {
+        public Vacancy(String vacancyName, String vacancyLink, LocalDateTime vacancyDate) {
             this.vacancyName = vacancyName;
             this.vacancyLink = vacancyLink;
             this.vacancyDate = vacancyDate;
@@ -60,7 +66,7 @@ public class HabrCareerParse {
             return vacancyLink;
         }
 
-        public String getVacancyDate() {
+        public LocalDateTime getVacancyDate() {
             return vacancyDate;
         }
     }
