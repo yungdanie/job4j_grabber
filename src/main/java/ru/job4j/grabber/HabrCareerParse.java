@@ -58,7 +58,9 @@ public class HabrCareerParse {
                     text());
             StringBuilder desc = new StringBuilder();
             for (Element element : document.select(".style-ugc").select("p, ul")) {
-                if (element.children().isEmpty() || element.children().is("br")) {
+                if (element.children().isEmpty() &&
+                        !element.children().text().isEmpty() ||
+                        element.children().is("br")) {
                     desc.append(sep).append(element.text())
                             .append(sep.repeat(3));
                 } else if (!element.children().isEmpty()) {
