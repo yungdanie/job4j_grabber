@@ -58,9 +58,9 @@ public class HabrCareerParse {
                     text());
             StringBuilder desc = new StringBuilder();
             for (Element element : document.select(".style-ugc").select("p, ul")) {
-                if (element.children().isEmpty() &&
-                        !element.children().text().isEmpty() ||
-                        element.children().is("br")) {
+                if (element.children().isEmpty()
+                        && !element.text().isEmpty()
+                        || element.children().is("br")) {
                     desc.append(sep).append(element.text())
                             .append(sep.repeat(3));
                 } else if (!element.children().isEmpty()) {
@@ -82,5 +82,17 @@ public class HabrCareerParse {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String retrieveDescription(String link) {
+        Connection connection = Jsoup.connect(link);
+        Document document;
+        try {
+            document = connection.get();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Element element = document.selectFirst(".style-ugc");
+        return element.text();
     }
 }
