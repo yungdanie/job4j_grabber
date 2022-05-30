@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class HabrCareerParse {
+public class HabrCareerParse implements Parse {
 
     private static HabrCareerDateTimeParser parser = new HabrCareerDateTimeParser();
     private static int id;
@@ -21,65 +21,13 @@ public class HabrCareerParse {
 
     private static final String PAGE_NUMBER = "?page=";
 
-    public static void main(String[] args) throws IOException {
-        Set<Post> list = new HashSet<>();
+    public static void main(String[] args) {
+        HabrCareerParse parser = new HabrCareerParse();
+        List<Post> list = new ArrayList<>();
         for (int i = 1; i <= 1; i++) {
-            Connection connection = Jsoup.connect(String.format("%s%s%d", PAGE_LINK, PAGE_NUMBER, i));
-            Document document = connection.get();
-            Elements rows = document.select(".vacancy-card__title");
-            rows.forEach(row -> list.add(createPost(String.format(
-                    "%s%s",
-                    SOURCE_LINK,
-                    row.child(0).attr("href")))));
+            list = parser.list(String.format("%s%s%d", PAGE_LINK, PAGE_NUMBER, i));
         }
-        list.forEach(System.out::println);
-    }
-
-    private static Post createPost(String link) {
-        try {
-            Document document = Jsoup.connect(link).get();
-            String sep = System.lineSeparator();
-            LocalDateTime date = parser.parse(
-                    document.selectFirst(".job_show_header__date").
-                            child(0).
-                            attr("datetime"));
-            StringBuilder title = new StringBuilder();
-            title.append("Компания: ").append(document.
-                    select(".company_name").
-                    get(0).
-                    text()).
-                    append(sep);
-            title.append("Title: ").
-                    append(document.
-                    selectFirst(".page-title").
-                    child(0).
-                    text());
-            StringBuilder desc = new StringBuilder();
-            for (Element element : document.select(".style-ugc").select("p, ul")) {
-                if (element.children().isEmpty()
-                        && !element.text().isEmpty()
-                        || element.children().is("br")) {
-                    desc.append(sep).append(element.text())
-                            .append(sep.repeat(3));
-                } else if (!element.children().isEmpty()) {
-                    if (element.children().is("strong")
-                            && !element.children().select("strong").text().isEmpty()) {
-                        desc.append(sep).append(element.text()).
-                                append(sep);
-                    } else if (element.children().is("li")) {
-                        for (Element li : element.children()) {
-                            desc.append("#".repeat(3)).
-                                    append("-").
-                                    append(li.text()).append(sep);
-                        }
-                    }
-                }
-            }
-
-        return new Post(id++, title.toString(), link, desc.toString(), date);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println(list);
     }
 
     private String retrieveDescription(String link) {
@@ -92,5 +40,62 @@ public class HabrCareerParse {
         }
         Element element = document.selectFirst(".style-ugc");
         return element.text();
+    }
+
+    @Override
+    public List<Post> list(String link) {
+        List<Post> list = new ArrayList<>();
+        String sep = System.lineSeparator();
+        Connection connection = Jsoup.connect(String.format(link));
+        try {
+            Document page = connection.get();
+            Elements elements = page.select(".vacancy-card__title");
+            for (Element element : elements) {
+                Document document = Jsoup.connect(String.format(
+                        "%s%s",
+                        SOURCE_LINK,
+                        element.child(0).attr("href"))).get();
+                LocalDateTime date = parser.parse(
+                        document.selectFirst(".job_show_header__date").
+                                child(0).
+                                attr("datetime"));
+                StringBuilder title = new StringBuilder();
+                title.append("Компания: ").append(document.
+                                select(".company_name").
+                                get(0).
+                                text()).
+                        append(sep);
+                title.append("Title: ").
+                        append(document.
+                                selectFirst(".page-title").
+                                child(0).
+                                text());
+                StringBuilder desc = new StringBuilder();
+                for (Element descr : document.select(".style-ugc").select("p, ul")) {
+                    if (descr.children().isEmpty()
+                            && !descr.text().isEmpty()
+                            || descr.children().is("br")) {
+                        desc.append(sep).append(descr.text())
+                                .append(sep.repeat(3));
+                    } else if (!descr.children().isEmpty()) {
+                        if (descr.children().is("strong")
+                                && !descr.children().select("strong").text().isEmpty()) {
+                            desc.append(sep).append(descr.text()).
+                                    append(sep);
+                        } else if (descr.children().is("li")) {
+                            for (Element li : descr.children()) {
+                                desc.append("#".repeat(3)).
+                                        append("-").
+                                        append(li.text()).append(sep);
+                            }
+                        }
+                    }
+                }
+                list.add(new Post(id++, title.toString(), link, desc.toString(), date));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
     }
 }
