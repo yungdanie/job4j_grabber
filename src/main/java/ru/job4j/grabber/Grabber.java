@@ -94,4 +94,5 @@ public class Grabber implements Grab {
         grab.init(new HabrCareerParse(new HabrCareerDateTimeParser()), store, scheduler);
         grab.web(store);
     }
+
 }
