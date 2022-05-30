@@ -21,6 +21,8 @@ public class HabrCareerParse implements Parse {
 
     private static final String PAGE_NUMBER = "?page=";
 
+    private static final int PARSE_NUM = 5;
+
     public HabrCareerParse(DateTimeParser dateTimeParser) {
         this.parser = dateTimeParser;
     }
@@ -40,7 +42,7 @@ public class HabrCareerParse implements Parse {
     @Override
     public List<Post> list(String link) {
         List<Post> list = new ArrayList<>();
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= PARSE_NUM; i++) {
             Connection connection = Jsoup.connect(String.format("link%d", i));
             try {
                 Document page = connection.get();
