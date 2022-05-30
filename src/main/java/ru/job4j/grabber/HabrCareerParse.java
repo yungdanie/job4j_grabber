@@ -27,12 +27,10 @@ public class HabrCareerParse {
             Connection connection = Jsoup.connect(String.format("%s%s%d", PAGE_LINK, PAGE_NUMBER, i));
             Document document = connection.get();
             Elements rows = document.select(".vacancy-card__title");
-            rows.forEach(row -> {
-                list.add(createPost(String.format(
-                        "%s%s",
-                        SOURCE_LINK,
-                        row.child(0).attr("href"))));
-            });
+            rows.forEach(row -> list.add(createPost(String.format(
+                    "%s%s",
+                    SOURCE_LINK,
+                    row.child(0).attr("href")))));
         }
         list.forEach(System.out::println);
     }
@@ -64,8 +62,8 @@ public class HabrCareerParse {
                     desc.append(sep).append(element.text())
                             .append(sep.repeat(3));
                 } else if (!element.children().isEmpty()) {
-                    if (element.children().is("strong") &&
-                            !element.children().select("strong").text().isEmpty()) {
+                    if (element.children().is("strong")
+                            && !element.children().select("strong").text().isEmpty()) {
                         desc.append(sep).append(element.text()).
                                 append(sep);
                     } else if (element.children().is("li")) {
