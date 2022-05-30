@@ -50,10 +50,10 @@ public class HabrCareerParse implements Parse {
             Document page = connection.get();
             Elements elements = page.select(".vacancy-card__title");
             for (Element element : elements) {
-                Document document = Jsoup.connect(String.format(
-                        "%s%s",
+                String pageLink = String.format("%s%s",
                         SOURCE_LINK,
-                        element.child(0).attr("href"))).get();
+                        element.child(0).attr("href"));
+                Document document = Jsoup.connect(pageLink).get();
                 LocalDateTime date = parser.parse(
                         document.selectFirst(".job_show_header__date").
                                 child(0).
@@ -90,7 +90,7 @@ public class HabrCareerParse implements Parse {
                         }
                     }
                 }
-                list.add(new Post(title.toString(), link, desc.toString(), date));
+                list.add(new Post(title.toString(), pageLink, desc.toString(), date));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
