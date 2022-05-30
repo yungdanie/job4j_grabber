@@ -28,6 +28,10 @@ public class Post {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -43,6 +47,7 @@ public class Post {
     public LocalDateTime getCreated() {
         return created;
     }
+
 
     @Override
     public boolean equals(Object o) {

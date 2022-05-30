@@ -14,7 +14,6 @@ import java.util.*;
 public class HabrCareerParse implements Parse {
 
     private static HabrCareerDateTimeParser parser = new HabrCareerDateTimeParser();
-    private static int id;
     private static final String SOURCE_LINK = "https://career.habr.com";
 
     private static final String PAGE_LINK = String.format("%s/vacancies/java_developer", SOURCE_LINK);
@@ -91,7 +90,7 @@ public class HabrCareerParse implements Parse {
                         }
                     }
                 }
-                list.add(new Post(id++, title.toString(), link, desc.toString(), date));
+                list.add(new Post(title.toString(), link, desc.toString(), date));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
