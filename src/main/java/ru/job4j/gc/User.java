@@ -2,7 +2,8 @@ package ru.job4j.gc;
 
 public class User {
 
-    public User(String firstName, int age) {
+    public User(String secondName, String firstName, int age) {
+        this.secondName = secondName;
         this.firstName = firstName;
         this.age = age;
     }
@@ -10,6 +11,7 @@ public class User {
     public User() {
     }
 
+    private String secondName;
     private String firstName;
 
     private int age;
