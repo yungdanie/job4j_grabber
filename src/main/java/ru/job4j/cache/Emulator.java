@@ -33,18 +33,18 @@ public class Emulator {
         emulator.changeCacheDir(ask("Напишите путь к кешируемой директории"));
         int ans  = defaultAsk();
         while (ans != 0) {
-            switch (ans) {
-                case (1) -> emulator.changeCacheDir(ask("Напишите путь к директории"));
-                case (2) -> emulator.fileCache.load(ask("Напишите путь к файлу"));
-                case (3) -> {
-                    String res = emulator.fileCache.load(ask("Напишите путь к файлу"));
-                    if (res != null) {
-                        System.out.println(res);
-                    }
+            if (ans == 1) {
+                emulator.changeCacheDir(ask("Напишите путь к директории"));
+            } else if (ans == 2) {
+                emulator.fileCache.load(ask("Напишите путь к файлу"));
+            } else if (ans == 3) {
+                String res = emulator.fileCache.load(ask("Напишите путь к файлу"));
+                if (res != null) {
+                    System.out.println(res);
                 }
-                default -> System.out.println("Выбранный пункт отсутствует");
+            } else {
+                System.out.println("Выбранный пункт отсутствует");
             }
-
             ans = defaultAsk();
         }
     }
