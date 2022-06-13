@@ -5,8 +5,8 @@ import java.util.StringJoiner;
 
 public class Emulator {
 
-    private DirFileCache fileCache = new DirFileCache();
-    private static Scanner scanner = new Scanner(System.in);
+    private final DirFileCache fileCache = new DirFileCache();
+    private static final Scanner SCANNER = new Scanner(System.in);
 
     public void changeCacheDir(String dir) {
         fileCache.setCachingDir(dir);
@@ -20,12 +20,12 @@ public class Emulator {
                 .add("2 - Загрузить содержимое файла в кеш")
                 .add("3 - Получить содержимое файла");
         System.out.println(joiner);
-        return scanner.nextInt();
+        return SCANNER.nextInt();
     }
 
     private static String ask(String quest) {
         System.out.println(quest);
-        return scanner.next();
+        return SCANNER.next();
     }
 
     public static void main(String[] args) {
@@ -44,6 +44,7 @@ public class Emulator {
                 }
                 default -> System.out.println("Выбранный пункт отсутствует");
             }
+
             ans = defaultAsk();
         }
     }
