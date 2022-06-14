@@ -7,36 +7,28 @@ import java.nio.file.Paths;
 
 public class DirFileCache extends AbstractCache<String, String> {
 
+    public String getCachingDir() {
+        return cachingDir;
+    }
+
     private String cachingDir;
 
-    public DirFileCache() {
+    public DirFileCache(String cache) {
+        this.cachingDir = cache;
     }
 
     public void setCachingDir(String cachingDir) {
-        Path path = Paths.get(cachingDir);
-        if (Files.exists(path) && Files.isDirectory(path)) {
-            this.cachingDir = cachingDir;
-            System.out.println("Директория успешно изменена");
-        } else {
-            throw new IllegalArgumentException();
-        }
+        this.cachingDir = cachingDir;
     }
 
     @Override
     protected String load(String key) {
         Path path = Path.of(cachingDir, key);
-        if (!Files.exists(path)) {
-            throw new IllegalArgumentException("Файл не существует и не может быть закеширован");
-        }
-        String res = get(key);
-        if (res == null) {
-            try {
-                res = Files.readString(path);
-                put(key, res);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            System.out.println("Файл успешно закеширован");
+        String res = null;
+        try {
+            res = Files.readString(path);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return res;
     }
