@@ -24,22 +24,18 @@ public class DirFileCache extends AbstractCache<String, String> {
 
     @Override
     protected String load(String key) {
-        Path path = Paths.get(cachingDir.concat("/").concat(key));
+        Path path = Path.of(cachingDir, key);
         if (!Files.exists(path)) {
             throw new IllegalArgumentException("Файл не существует и не может быть закеширован");
         }
         String res = get(key);
         if (res == null) {
-            StringBuilder builder = new StringBuilder();
-            try (BufferedReader in = new BufferedReader(new FileReader(path.toFile()))) {
-                while (in.ready()) {
-                    builder.append(in.readLine());
-                }
+            try {
+                res = Files.readString(path);
+                put(key, res);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            res = builder.toString();
-            put(key, res);
             System.out.println("Файл успешно закеширован");
         }
         return res;

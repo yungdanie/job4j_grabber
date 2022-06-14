@@ -1,7 +1,5 @@
 package ru.job4j.cache;
 
-import java.io.FileReader;
-import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,11 +13,8 @@ public abstract class AbstractCache<K, V> {
     }
 
     public V get(K key) {
-        try {
-            return cache.get(key).get();
-        } catch (NullPointerException e) {
-            return null;
-        }
+        V res = cache.getOrDefault(key, new SoftReference<>(null)).get();
+        return res;
     }
 
     protected abstract V load(K key);
