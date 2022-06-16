@@ -38,4 +38,35 @@ public class CinemaTest {
         cinema.add(exp);
         assertEquals(List.of(exp), is(cinema.find(session -> true)));
     }
+
+    @Test (expected = IllegalArgumentException.class) @Ignore
+    public void whenWrongDate() {
+        Account account = new AccountCinema();
+        Cinema cinema = new Cinema3D();
+        Calendar date = Calendar.getInstance();
+        date.set(2034, Calendar.NOVEMBER, -1, 12, 00);
+        Ticket ticket = cinema.buy(account, 1, 1, date);
+        throw new IllegalArgumentException();
+    }
+
+    @Test (expected = IllegalArgumentException.class) @Ignore
+    public void whenWrongSeat() {
+        Account account = new AccountCinema();
+        Cinema cinema = new Cinema3D();
+        Calendar date = Calendar.getInstance();
+        date.set(2022, Calendar.NOVEMBER, 1, 1, 01);
+        Ticket ticket = cinema.buy(account, -2, -5, date);
+        throw new IllegalArgumentException();
+    }
+
+    @Test (expected = IllegalArgumentException.class) @Ignore
+    public void whenSeatAlreadyBought() {
+        Account account = new AccountCinema();
+        Cinema cinema = new Cinema3D();
+        Calendar date = Calendar.getInstance();
+        date.set(2022, Calendar.NOVEMBER, 1, 11, 01);
+        Ticket ticket1 = cinema.buy(account, 1, 1, date);
+        Ticket ticket2 = cinema.buy(account, 1, 1, date);
+        throw new IllegalArgumentException();
+    }
 }
