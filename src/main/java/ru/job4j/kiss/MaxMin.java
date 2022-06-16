@@ -5,6 +5,13 @@ import java.util.Iterator;
 import java.util.List;
 
 public class MaxMin {
+    public static <T> T max(List<T> value, Comparator<T> comparator) {
+        return findMaxOrMin(value, comparator);
+    }
+
+    public static <T> T min(List<T> value, Comparator<T> comparator) {
+        return findMaxOrMin(value, comparator);
+    }
 
     public static <T> T findMaxOrMin(List<T> value, Comparator<T> comparator) {
         Iterator<T> iterator = value.iterator();
