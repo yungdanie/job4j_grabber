@@ -34,6 +34,8 @@ public class Emulator {
             System.out.println("Директория успешно изменена");
         } else if (bool) {
             fileCache = new DirFileCache(dir);
+        } else {
+            throw new IllegalArgumentException("Директория указана неверно");
         }
     }
 
@@ -56,7 +58,7 @@ public class Emulator {
                 emulator.changeCacheDir(ask(DIR_QUEST));
             } else if (ans == TWO) {
                 String file = ask(FILE_QUEST);
-                if (!new File(file).exists()) {
+                if (!Files.exists(Path.of(emulator.fileCache.getCachingDir(), file))) {
                     throw new IllegalArgumentException("Файл не существует и не может быть закеширован");
                 }
                 emulator.fileCache.get(file);
