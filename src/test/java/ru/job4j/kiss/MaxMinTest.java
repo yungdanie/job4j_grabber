@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class MaxMinTest {
 
@@ -25,5 +26,18 @@ public class MaxMinTest {
     @Test (expected = IllegalArgumentException.class)
     public void whenListEmpty() {
         Integer max = MaxMin.max(new ArrayList<>(), new MinComparator());
+    }
+    @Test
+    public void whenFindMaxString() {
+        String max = MaxMin.max(Arrays.asList("а", "б", "в", "гд", "у"), Comparator.naturalOrder());
+        String exp = "у";
+        Assert.assertEquals(exp, max);
+    }
+
+    @Test
+    public void whenFindMinString() {
+        String max = MaxMin.min(Arrays.asList("а", "б", "в", "гд", "у"), Comparator.reverseOrder());
+        String exp = "а";
+        Assert.assertEquals(exp, max);
     }
 }

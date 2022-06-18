@@ -1,7 +1,6 @@
 package ru.job4j.kiss;
 
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 public class MaxMin {
@@ -13,21 +12,19 @@ public class MaxMin {
         return findMaxOrMin(value, comparator);
     }
 
-    public static <T> T findMaxOrMin(List<T> value, Comparator<T> comparator) {
-        Iterator<T> iterator = value.iterator();
-        T num;
-        T next;
-        if (iterator.hasNext()) {
-            num = iterator.next();
-        } else {
+    private static <T> T findMaxOrMin(List<T> value, Comparator<T> comparator) {
+
+        if (value.isEmpty()) {
             throw new IllegalArgumentException("Лист значений пуст");
         }
-        while (iterator.hasNext()) {
-            next = iterator.next();
-            if (comparator.compare(num, next) <= 0) {
-                num = next;
+        T extremum = value.get(0);
+        T next;
+        for (T element : value) {
+            next = element;
+            if (comparator.compare(extremum, next) <= 0) {
+                extremum = next;
             }
         }
-        return num;
+        return extremum;
     }
 }
