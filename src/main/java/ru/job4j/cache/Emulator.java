@@ -18,16 +18,26 @@ public class Emulator {
     private static final int CACHE_FILE = 1;
     private static final int CACHE_AND_GET_FILE = 2;
     private static final int EXIT = 0;
-
-    private static final String DEFAULT_QUEST = JOINER.add("Список комманд:").add("0 - Выход")
-            .add("1 - Указать кешируемую дерикторию").add("2 - Загрузить содержимое файла в кеш")
-            .add("3 - Получить содержимое файла").toString();
+    private static final String DEFAULT_QUEST = """
+            Список комманд:
+            0 - Выход
+            1 - Загрузить содержимое файла в кеш
+            2 - Получить содержимое файла
+            """;
 
 
     public void changeCacheDir(String dir) {
         Path path = Paths.get(dir);
-        if (Files.exists(path) && Files.isDirectory(path)) {
-            fileCache = new DirFileCache(dir);
+        try {
+            if (!Files.exists(path)) {
+                throw new IllegalArgumentException("Директория не существует. Введите корректный путь.");
+            } else if (!Files.isDirectory(path)) {
+                throw new IllegalArgumentException("Путь не является директорией. Введите корректный путь.");
+            } else {
+                fileCache = new DirFileCache(dir);
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
         }
     }
 
@@ -43,13 +53,20 @@ public class Emulator {
 
     public static void main(String[] args) {
         Emulator emulator = new Emulator();
-        emulator.changeCacheDir(ask(DIR_QUEST));
+        while (emulator.fileCache == null) {
+            emulator.changeCacheDir(ask(DIR_QUEST));
+        }
         int ans  = defaultAsk();
         while (ans != EXIT) {
             if (ans == CACHE_FILE) {
                 String file = ask(FILE_QUEST);
-                if (!Files.exists(Path.of(emulator.fileCache.getCachingDir(), file))) {
-                    throw new IllegalArgumentException("Файл не существует и не может быть закеширован");
+                try {
+                    if (!Files.exists(Path.of(emulator.fileCache.getCachingDir(), file))) {
+                        throw new IllegalArgumentException("Файл не существует и не может"
+                                .concat("быть закеширован. Введите корректный путь"));
+                    }
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
                 }
                 emulator.fileCache.get(file);
             } else if (ans == CACHE_AND_GET_FILE) {
