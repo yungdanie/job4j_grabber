@@ -25,4 +25,18 @@ public class GeneratorTest {
         String exp = "machine #1304 status running";
         Assert.assertEquals(exp, res);
     }
+
+    @Test (expected = IllegalArgumentException.class) @Ignore
+    public void whenHaveMoreKeys() {
+        Generator generator = new Generate();
+        String res = generator.produce("status ${status}",
+                Map.of("num", "1304", "status", "running"));
+    }
+
+    @Test (expected = IllegalArgumentException.class) @Ignore
+    public void whenHaveMoreSample() {
+        Generator generator = new Generate();
+        String res = generator.produce("status ${status}, available ${available}",
+                Map.of("status", "running"));
+    }
 }
