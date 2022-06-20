@@ -4,27 +4,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
-import java.util.StringJoiner;
 
 public class Emulator {
-
     private DirFileCache fileCache = null;
     private static final Scanner SCANNER = new Scanner(System.in);
-
     private static final String DIR_QUEST = "Напишите путь к кешируемой директории";
 
     private static final String FILE_QUEST = "Напишите путь к файлу";
-    private static final StringJoiner JOINER = new StringJoiner(System.lineSeparator());
     private static final int CACHE_FILE = 1;
     private static final int CACHE_AND_GET_FILE = 2;
     private static final int EXIT = 0;
     private static final String DEFAULT_QUEST = """
-            Список комманд:
-            0 - Выход
-            1 - Загрузить содержимое файла в кеш
-            2 - Получить содержимое файла
-            """;
-
+           Список комманд:
+           0 - Выход
+           1 - Загрузить содержимое файла в кеш
+           2 - Получить содержимое файла
+           """;
 
     public void changeCacheDir(String dir) {
         Path path = Paths.get(dir);
