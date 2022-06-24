@@ -7,7 +7,6 @@ import java.util.List;
  * две этих сущности обладают общими признаками, но для правильного использования нужно было сделать
  * общий интерфейс Employee и реализовывать его.
  */
-
 public class OCP {
 
     private static class Administrator {

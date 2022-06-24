@@ -11,7 +11,6 @@ public class OCP2 {
     public String createHTML() {
         return "<b>HTML text<//b>";
     }
-
     public String createXML() {
         return """
                   <?xml version="1.0" encoding="UTF-8" ?>

@@ -5,7 +5,6 @@ package ru.job4j.design.ocp;
  * значения "Employee" мы не можем создать нужную нам реализацию т.к. привязываемся к классу Employee а не к
  * общему интерфейсу для работников, что нарушает принципы OCP.
  */
-
 public class OCP3 {
     public Employee doSomeMod(Employee employee) {
         return new Employee();
