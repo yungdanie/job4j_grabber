@@ -9,9 +9,7 @@ package ru.job4j.design.ocp;
 public class OCP2 {
 
     public String createHTML() {
-        return """
-                <b>HTML text<//b>
-                """;
+        return "<b>HTML text<//b>";
     }
 
     public String createXML() {
