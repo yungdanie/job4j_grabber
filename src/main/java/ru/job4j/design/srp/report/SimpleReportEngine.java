@@ -131,7 +131,7 @@ public class SimpleReportEngine implements Report {
                     text.append(employee.getSalary()).append(";");
                 }
             }
-            text.append(sep);
+            text.append("\r").append(sep);
         }
         if (type != null) {
             text = type.parse(text);
