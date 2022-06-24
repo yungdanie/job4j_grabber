@@ -41,7 +41,8 @@ public class HTMLDoc implements DocumentType {
             builder.append(HTML_EMPLOYEES_START);
             for (int i = 0; i <= header.length - 1; i++) {
                 builder.append(WHITE_SPACE.repeat(12))
-                        .append(String.format("%s=", header[i])).append(holder[i]).append(System.lineSeparator());
+                        .append(String.format("%s=", header[i]))
+                        .append(holder[i]).append("\r").append(System.lineSeparator());
             }
             builder.append(HTML_EMPLOYEES_END);
         }
