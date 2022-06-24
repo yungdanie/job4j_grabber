@@ -33,7 +33,7 @@ public class HTMLDoc implements DocumentType {
     public StringBuilder parse(StringBuilder head) {
         String str = head.toString();
         StringBuilder builder = new StringBuilder(HTML_BASE_START);
-        String[] strings = str.split(System.lineSeparator());
+        String[] strings = str.split("\r".concat(System.lineSeparator()));
         String[] header = strings[0].split(";");
         List<String> list = Arrays.stream(strings).skip(1).toList();
         for (String element : list) {
