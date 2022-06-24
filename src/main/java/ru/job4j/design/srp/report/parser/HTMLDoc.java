@@ -29,7 +29,6 @@ public class HTMLDoc implements DocumentType {
     private static final String HTML_EMPLOYEES_END = """
                     </Employer>
             """;
-
     public StringBuilder parse(StringBuilder head) {
         String str = head.toString();
         StringBuilder builder = new StringBuilder(HTML_BASE_START);
