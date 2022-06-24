@@ -78,10 +78,18 @@ public class SimpleReportEngine implements Report {
                         x = x.toLowerCase(Locale.ROOT);
                         try {
                             switch (x) {
-                                case "name" -> nameCond = true;
-                                case "hired" -> hiredCond = true;
-                                case "fired" -> firedCond = true;
-                                case "salary" -> salaryCond = true;
+                                case "name" -> {
+                                    nameCond = true;
+                                }
+                                case "hired" -> {
+                                    hiredCond = true;
+                                }
+                                case "fired" -> {
+                                    firedCond = true;
+                                }
+                                case "salary" -> {
+                                    salaryCond = true;
+                                }
                                 default -> throw new IllegalArgumentException("Неизвестное значение " + x + ".".concat(
                                         "Значение будет пропущено."
                                 ));
