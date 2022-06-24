@@ -107,7 +107,7 @@ public class SimpleReportEngine implements Report {
             text.append(DEFAULT_HEADER);
             setDefaultValuesToHigh();
         }
-        text.append(sep);
+        text.append("\r").append(sep);
         List<Employee> list;
         if (comparator != null) {
             list = store.findBy(filter, comparator);
