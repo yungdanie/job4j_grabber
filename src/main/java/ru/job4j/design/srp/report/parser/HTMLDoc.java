@@ -7,7 +7,7 @@ public class HTMLDoc implements DocumentType {
 
     private final static String WHITE_SPACE = " ";
 
-    private final static String SEP = System.lineSeparator();
+    private final static String SEP = "\r\n";
 
     private final static String HTML_BASE_START = """
             <!DOCTYPE html>
@@ -33,7 +33,7 @@ public class HTMLDoc implements DocumentType {
     public StringBuilder parse(StringBuilder head) {
         String str = head.toString();
         StringBuilder builder = new StringBuilder(HTML_BASE_START);
-        String[] strings = str.split(System.lineSeparator());
+        String[] strings = str.split("\r\n");
         String[] header = strings[0].split(";");
         List<String> list = Arrays.stream(strings).skip(1).toList();
         for (String element : list) {
@@ -41,7 +41,7 @@ public class HTMLDoc implements DocumentType {
             builder.append(HTML_EMPLOYEES_START);
             for (int i = 0; i <= header.length - 1; i++) {
                 builder.append(WHITE_SPACE.repeat(12))
-                        .append(String.format("%s=", header[i])).append(holder[i]).append(SEP);
+                        .append(String.format("%s=", header[i])).append(holder[i]).append("\r\n");
             }
             builder.append(HTML_EMPLOYEES_END);
         }

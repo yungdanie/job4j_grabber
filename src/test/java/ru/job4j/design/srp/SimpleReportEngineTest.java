@@ -73,7 +73,7 @@ public class SimpleReportEngineTest {
                         </Employer>
                     </body>
                 </html>
-                    """, time, time, time, time);
+                """, time, time, time, time);
         assertThat(engine.generate(em -> true, configuration), is(expect));
     }
 
