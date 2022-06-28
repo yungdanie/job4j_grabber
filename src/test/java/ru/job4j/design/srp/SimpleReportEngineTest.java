@@ -1,14 +1,9 @@
 package ru.job4j.design.srp;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import ru.job4j.design.srp.model.Employee;
-import ru.job4j.design.srp.model.ExchangeRate;
-import ru.job4j.design.srp.report.Report;
-import ru.job4j.design.srp.report.SimpleReportEngine;
-import ru.job4j.design.srp.report.parser.Configuration;
-import ru.job4j.design.srp.report.parser.DocumentType;
-import ru.job4j.design.srp.report.parser.HTMLDoc;
-import ru.job4j.design.srp.report.parser.Parser;
+import ru.job4j.design.srp.report.*;
 import ru.job4j.design.srp.store.MemStore;
 
 import java.text.SimpleDateFormat;
@@ -44,13 +39,11 @@ public class SimpleReportEngineTest {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
         String time = DATE_FORMAT.format(now.getTime());
-        DocumentType type = new HTMLDoc();
         Employee worker1 = new Employee("Ivan", now, now, 100);
         Employee worker2 = new Employee("Jenya", now, now, 300);
         store.add(worker1);
         store.add(worker2);
-        Configuration configuration = Parser.getDefaultConfiguration().setDocumentType(type);
-        Report engine = new SimpleReportEngine(store);
+        Report engine = new HTMLReportEngine(store);
         String expect = String.format("""
                 <!DOCTYPE html>
                 <html>
@@ -60,21 +53,21 @@ public class SimpleReportEngineTest {
                     </head>
                     <body>
                         <Employer>
-                            name=Ivan\r
-                            hired=%s\r
-                            fired=%s\r
-                            salary=100.0\r
+                            name=Ivan
+                            hired=%s
+                            fired=%s
+                            salary=100.0
                         </Employer>
                         <Employer>
-                            name=Jenya\r
-                            hired=%s\r
-                            fired=%s\r
-                            salary=300.0\r
+                            name=Jenya
+                            hired=%s
+                            fired=%s
+                            salary=300.0
                         </Employer>
                     </body>
                 </html>
                 """, time, time, time, time);
-        assertThat(engine.generate(em -> true, configuration), is(expect));
+        assertThat(engine.generate(em -> true), is(expect));
     }
 
     @Test
@@ -87,16 +80,15 @@ public class SimpleReportEngineTest {
         store.add(worker1);
         store.add(worker2);
         store.add(worker3);
-        Configuration configuration = Parser.getDefaultConfiguration().setHeader("name;salary;")
-                .setComparator((o1, o2) -> (int) (o2.getSalary() - o1.getSalary()));
-        Report engine = new SimpleReportEngine(store);
+
+        Report engine = new HRReportEngine(store);
         String expect = """
-                name;salary;\r
-                Jenya;300.0;\r
-                Ivan;100.0;\r
-                Vanya;50.0;\r
+                name;salary;
+                Jenya;300.0;
+                Ivan;100.0;
+                Vanya;50.0;
                 """;
-        assertThat(engine.generate(em -> true, configuration), is(expect));
+        assertThat(engine.generate(em -> true), is(expect));
     }
 
     @Test
@@ -108,13 +100,31 @@ public class SimpleReportEngineTest {
         Employee worker2 = new Employee("Jenya", now, now, 165);
         store.add(worker1);
         store.add(worker2);
-        Configuration configuration = Parser.getDefaultConfiguration().setValueCurrency(ExchangeRate.DOLLAR);
+        Report engine = new AccountantReportEngine(store);
+        String expect = String.format("""
+                    name;hired;fired;salary;
+                    Ivan;%1$s;%1$s;2.0;
+                    Jenya;%1$s;%1$s;3.0;
+                    """, time);
+        assertThat(engine.generate(em -> true), is(expect));
+    }
+
+    @Ignore
+    @Test
+    public void whenJsonDocumentGenerated() {
+        MemStore store = new MemStore();
+        Calendar now = Calendar.getInstance();
+        String time = DATE_FORMAT.format(now.getTime());
+        Employee worker1 = new Employee("Ivan", now, now, 110);
+        Employee worker2 = new Employee("Jenya", now, now, 165);
+        store.add(worker1);
+        store.add(worker2);
         Report engine = new SimpleReportEngine(store);
         String expect = String.format("""
                     name;hired;fired;salary;\r
                     Ivan;%1$s;%1$s;2.0;\r
                     Jenya;%1$s;%1$s;3.0;\r
                     """, time);
-        assertThat(engine.generate(em -> true, configuration), is(expect));
+        assertThat(engine.generate(em -> true), is(expect));
     }
 }
