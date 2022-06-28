@@ -1,6 +1,5 @@
 package ru.job4j.design.srp;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import ru.job4j.design.srp.model.Employee;
 import ru.job4j.design.srp.report.*;
@@ -109,7 +108,7 @@ public class SimpleReportEngineTest {
         assertThat(engine.generate(em -> true), is(expect));
     }
 
-    @Ignore
+
     @Test
     public void whenJsonDocumentGenerated() {
         MemStore store = new MemStore();
@@ -119,12 +118,51 @@ public class SimpleReportEngineTest {
         Employee worker2 = new Employee("Jenya", now, now, 165);
         store.add(worker1);
         store.add(worker2);
-        Report engine = new SimpleReportEngine(store);
+        Report engine = new JSONReportEngine(store);
         String expect = String.format("""
-                    name;hired;fired;salary;\r
-                    Ivan;%1$s;%1$s;2.0;\r
-                    Jenya;%1$s;%1$s;3.0;\r
+                {
+                  "name": "Ivan",
+                  "hired": "%1$s",
+                  "fired": "%1$s",
+                  "salary": 110.0
+                }
+                {
+                  "name": "Jenya",
+                  "hired": "%1$s",
+                  "fired": "%1$s",
+                  "salary": 165.0
+                }
                     """, time);
+        assertThat(engine.generate(em -> true), is(expect));
+    }
+
+    @Test
+    public void whenXMLDocumentGenerated() {
+        MemStore store = new MemStore();
+        Calendar now = Calendar.getInstance();
+        String time = DATE_FORMAT.format(now.getTime());
+        Employee worker1 = new Employee("Ivan", now, now, 110);
+        Employee worker2 = new Employee("Jenya", now, now, 165);
+        store.add(worker1);
+        store.add(worker2);
+        Report engine = new XMLReportEngine(store);
+        String expect = String.format("""
+                <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+                <List>
+                    <employees>
+                        <name>Ivan</name>
+                        <hired>%1$s</hired>
+                        <fired>%1$s</fired>
+                        <salary>110.0</salary>
+                    </employees>
+                    <employees>
+                        <name>Jenya</name>
+                        <hired>%1$s</hired>
+                        <fired>%1$s</fired>
+                        <salary>165.0</salary>
+                    </employees>
+                </List>
+                """, time);
         assertThat(engine.generate(em -> true), is(expect));
     }
 }

@@ -1,10 +1,18 @@
 package ru.job4j.design.srp.model;
 
+
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Objects;
 
+@XmlType(propOrder = {"name", "hired", "fired", "salary"})
+@XmlRootElement(name = "Employer")
 public class Employee {
-    private ExchangeRate rate;
     private String name;
     private Calendar hired;
     private Calendar fired;
@@ -28,6 +36,7 @@ public class Employee {
         this.name = name;
     }
 
+    @XmlJavaTypeAdapter(DateFormatterAdapter.class)
     public Calendar getHired() {
         return hired;
     }
@@ -36,6 +45,7 @@ public class Employee {
         this.hired = hired;
     }
 
+    @XmlJavaTypeAdapter(DateFormatterAdapter.class)
     public Calendar getFired() {
         return fired;
     }
@@ -52,10 +62,6 @@ public class Employee {
         this.salary = salary;
     }
 
-    public void setCurrency(ExchangeRate rate) {
-        this.rate = rate;
-        salary = salary / rate.getRate();
-    }
 
 
     @Override
@@ -75,7 +81,21 @@ public class Employee {
         return Objects.hash(name);
     }
 
-    public ExchangeRate getRate() {
-        return rate;
+    private static class DateFormatterAdapter extends XmlAdapter<String, Calendar> {
+        private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd:MM:yyyy HH:mm");
+
+
+        @Override
+        public Calendar unmarshal(String s) throws Exception {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateFormat.parse(s));
+            return calendar;
+        }
+
+        @Override
+        public String marshal(Calendar calendar) throws Exception {
+            return dateFormat.format(calendar.getTime());
+        }
     }
+
 }
