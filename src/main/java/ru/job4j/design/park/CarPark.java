@@ -3,10 +3,7 @@ package ru.job4j.design.park;
 public interface CarPark {
 
     int getSize();
+    int getOccupiedSpace();
 
-    int addCar(Car car);
-
-    int removeCar(int id);
-
-    int removeCar(Car car);
+    int setOccupiedSpace();
 }

@@ -9,4 +9,7 @@ public interface ParkingControl {
     int removeCar(int id);
 
     int removeCar(Car car);
+
+    Car getCar(int id);
+    Car getCar(Car car);
 }
