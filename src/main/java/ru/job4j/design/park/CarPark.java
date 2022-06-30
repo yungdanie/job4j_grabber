@@ -2,8 +2,11 @@ package ru.job4j.design.park;
 
 public interface CarPark {
 
-    int getSize();
-    int getOccupiedSpace();
+    int getPassengerSize();
+    int getTruckSize();
+    int getOccupiedPassengerSpace();
+    int getOccupiedTruckSpace();
 
-    int setOccupiedSpace();
+    void setPassengerOccupiedSpace();
+    void setTruckOccupiedSpace();
 }
