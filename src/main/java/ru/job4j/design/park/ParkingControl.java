@@ -4,7 +4,7 @@ public interface ParkingControl {
 
     boolean checkParkingSpace();
 
-    int addCar(Car car);
+    boolean addCar(Car car);
 
     int removeCar(int id);
 
