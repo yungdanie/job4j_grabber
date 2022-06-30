@@ -5,4 +5,6 @@ public interface Car {
     int getSize();
 
     CarPark getParkingSpace();
+
+    void setParkingSpace();
 }
