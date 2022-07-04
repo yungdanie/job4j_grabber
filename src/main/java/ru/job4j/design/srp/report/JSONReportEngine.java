@@ -11,17 +11,18 @@ import java.util.function.Predicate;
 public class JSONReportEngine implements Report {
 
     private final Store store;
-    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    public static Gson gsonBuilder;
 
     public JSONReportEngine(Store store) {
         this.store = store;
+        gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
     }
 
     @Override
     public String generate(Predicate<Employee> filter) {
         StringBuilder gson = new StringBuilder();
         List<Employee> list = store.findBy(filter);
-        gson.append(GSON.toJson(list));
+        gson.append(JSONReportEngine.gsonBuilder.toJson(list));
         return gson.toString();
     }
 }
