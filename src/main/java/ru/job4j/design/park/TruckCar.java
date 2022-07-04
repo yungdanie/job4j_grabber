@@ -7,7 +7,7 @@ public class TruckCar implements Car {
 
 
     public TruckCar(int id, int size) {
-        if (size <= Car.ONE) {
+        if (size > Car.ONE) {
             this.size = size;
         }
         this.id = id;
