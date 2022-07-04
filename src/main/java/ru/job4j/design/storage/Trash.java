@@ -6,9 +6,6 @@ public class Trash implements Store {
 
     private final Map<Integer, Food> foodMap = new HashMap<>();
 
-    public Trash() {
-    }
-
     @Override
     public Food get(int id) {
         return foodMap.getOrDefault(id, null);
