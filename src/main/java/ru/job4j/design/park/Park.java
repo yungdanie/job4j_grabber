@@ -12,8 +12,8 @@ public class Park implements AbstractPark {
 
 
     public Park(int lightCarSize, int truckCarSize) {
-        ligthCarList = new ArrayList<>(lightCarSize);
-        truckCarList = new ArrayList<>(truckCarSize);
+        ligthCarList = new ArrayList<>();
+        truckCarList = new ArrayList<>();
         this.ligthSize = lightCarSize;
         this.truckSize = truckCarSize;
     }
@@ -33,13 +33,15 @@ public class Park implements AbstractPark {
 
     @Override
     public boolean validateLightCar(Car car) {
-        return car.getSize() == 1 && ligthSize < ligthCarList.size();
+        return car.getSize() == 1 && ligthSize > ligthCarList.size();
     }
 
     @Override
     public boolean validateTruckCar(Car car) {
         return car.getSize() > 1
-                && car.getSize() != 0 && truckSize < truckCarList.size();
+                && car.getSize() != 0
+                && truckSize >= truckCarList.size()
+                && truckSize >= car.getSize();
     }
 
 
