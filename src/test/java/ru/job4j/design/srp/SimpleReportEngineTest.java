@@ -52,16 +52,16 @@ public class SimpleReportEngineTest {
                     </head>
                     <body>
                         <Employer>
-                            name=Ivan\r
-                            hired=%s\r
-                            fired=%s\r
-                            salary=100.0\r
+                            name=Ivan
+                            hired=%s
+                            fired=%s
+                            salary=100.0
                         </Employer>
                         <Employer>
-                            name=Jenya\r
-                            hired=%s\r
-                            fired=%s\r
-                            salary=300.0\r
+                            name=Jenya
+                            hired=%s
+                            fired=%s
+                            salary=300.0
                         </Employer>
                     </body>
                 </html>
