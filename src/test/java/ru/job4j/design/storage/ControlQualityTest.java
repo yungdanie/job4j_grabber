@@ -79,6 +79,7 @@ public class ControlQualityTest {
 
     @Test
     public void whenFoodPlacedInSeveralPlaces() {
+
         Calendar calendarCreate1 = Calendar.getInstance();
         calendarCreate1.setTimeInMillis(1656592846);
         Calendar calendarExp1 = Calendar.getInstance();
