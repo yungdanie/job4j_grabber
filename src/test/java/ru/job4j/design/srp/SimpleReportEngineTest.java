@@ -82,10 +82,10 @@ public class SimpleReportEngineTest {
 
         Report engine = new HRReportEngine(store);
         String expect = """
-                name;salary;\r
-                Jenya;300.0;\r
-                Ivan;100.0;\r
-                Vanya;50.0;\r
+                name;salary;
+                Jenya;300.0;
+                Ivan;100.0;
+                Vanya;50.0;
                 """;
         assertThat(expect, is(engine.generate(em -> true)));
     }
@@ -101,9 +101,9 @@ public class SimpleReportEngineTest {
         store.add(worker2);
         Report engine = new AccountantReportEngine(store);
         String expect = String.format("""
-                    name;hired;fired;salary;\r
-                    Ivan;%1$s;%1$s;2.0;\r
-                    Jenya;%1$s;%1$s;3.0;\r
+                    name;hired;fired;salary;
+                    Ivan;%1$s;%1$s;2.0;
+                    Jenya;%1$s;%1$s;3.0;
                     """, time);
         assertThat(expect, is(engine.generate(em -> true)));
     }
