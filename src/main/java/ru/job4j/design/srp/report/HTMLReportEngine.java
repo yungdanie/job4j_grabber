@@ -10,7 +10,7 @@ public class HTMLReportEngine implements Report {
     private final Store store;
     private final static String WHITE_SPACE = " ".repeat(12);
 
-    private final static String SEP = "\n";
+    private final static String SEP = System.lineSeparator();
 
     private final static String HTML_BASE_START = """
             <!DOCTYPE html>

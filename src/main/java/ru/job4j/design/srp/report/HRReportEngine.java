@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 public class HRReportEngine implements Report {
     private final Store store;
 
-    private static final String SEP = "\n";
+    private static final String SEP = System.lineSeparator();
 
 
     public HRReportEngine(Store store) {

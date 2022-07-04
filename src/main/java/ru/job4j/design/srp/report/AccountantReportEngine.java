@@ -13,7 +13,7 @@ public class AccountantReportEngine implements Report {
 
     private final double rate = ExchangeRate.DOLLAR.getRate();
 
-    private static final String SEP = "\n";
+    private static final String SEP = System.lineSeparator();
 
     public AccountantReportEngine(Store store) {
         this.store = store;
