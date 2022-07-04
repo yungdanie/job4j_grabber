@@ -5,6 +5,10 @@ import java.util.*;
 public class Shop implements Store {
 
     private final Map<Integer, Food> foodMap = new HashMap<>();
+    private final double zeroPercents = 0;
+    private final double seventyFivePercents = 0.75;
+    private final double twentyFivePercents = 0.25;
+
 
     public Shop() {
     }
@@ -20,23 +24,25 @@ public class Shop implements Store {
     }
 
     @Override
-    public void add(Food food) {
-        foodMap.put(food.getId(), food);
+    public boolean add(Food food) {
+        boolean res = false;
+        if (validate(food)) {
+            foodMap.put(food.getId(), food);
+            res = true;
+        }
+        return res;
     }
 
     @Override
-    public void validate(List<Food> list) {
-        double currentInMillis = Calendar.getInstance().getTimeInMillis();
-        for (Food food : list) {
-            double createInMillis = food.getCreateDate().getTimeInMillis() * 1000;
-            double expiredInMillis = food.getExpiryDate().getTimeInMillis() * 1000;
-            double a = (expiredInMillis - currentInMillis) / (expiredInMillis - createInMillis + 1);
-            if (a >= 0.25 && a <= 0.75) {
-                add(food);
-            } else if (a < 0.25 && a >= 0) {
-                food.setDiscount(0.75);
-                add(food);
-            }
+    public boolean validate(Food food) {
+        boolean res = false;
+        double a = getPercentLifeExpired(food);
+        if (a >= twentyFivePercents && a <= seventyFivePercents) {
+            res = true;
+        } else if (a < twentyFivePercents && a >= zeroPercents) {
+            food.setDiscount(twentyFivePercents);
+            res = true;
         }
+        return res;
     }
 }

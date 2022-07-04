@@ -1,28 +1,28 @@
 package ru.job4j.design.storage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ControlQuality {
-    private final List<Food> foodList;
 
     private final List<Store> storeList;
 
-    public ControlQuality(List<Food> list, List<Store> storeList) {
-        this.foodList = list;
+    public ControlQuality(List<Store> storeList) {
         this.storeList = storeList;
     }
 
-    public void validator() {
-        for (Store store : storeList) {
-            store.validate(foodList);
-        }
-    }
-
-    public List<Food> getFoodList() {
-        return foodList;
+    public void validator(List<Food> list) {
+        List<Food> newList = new ArrayList<>(list);
+            for (Store store : storeList) {
+                for (Food food : newList) {
+                    if (store.validate(food)) {
+                        store.add(food);
+                    }
+                }
+            }
     }
 
     public List<Store> getStoreList() {
-        return storeList;
+        return new ArrayList<>(storeList);
     }
 }

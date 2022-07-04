@@ -20,17 +20,18 @@ public class Trash implements Store {
     }
 
     @Override
-    public void add(Food food) {
-        foodMap.put(food.getId(), food);
+    public boolean add(Food food) {
+        boolean res = false;
+        if (validate(food)) {
+            foodMap.put(food.getId(), food);
+            res = true;
+        }
+        return res;
     }
 
     @Override
-    public void validate(List<Food> list) {
-        Calendar currentDate = Calendar.getInstance();
-        for (Food food : list) {
-            if (currentDate.after(food.getExpiryDate())) {
-                add(food);
-            }
-        }
+    public boolean validate(Food food) {
+        boolean res = getPercentLifeExpired(food) < 0;
+        return res;
     }
 }

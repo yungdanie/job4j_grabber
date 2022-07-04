@@ -12,24 +12,12 @@ public class Food {
 
     private int id;
 
-    private Store currentStore;
-
-    public Food(String name, Calendar createDate, Calendar expiryDate,
-                double price, double discount, int id) {
-        this.name = name;
-        this.expiryDate = expiryDate;
-        this.createDate = createDate;
-        this.discount = discount;
-        this.price = price * (1 - discount);
-        this.id = id;
-    }
-
     public Food(String name, Calendar createDate, Calendar expiryDate,
                 double price, int id) {
         this.name = name;
         this.expiryDate = expiryDate;
         this.createDate = createDate;
-        this.price = price * (1 - discount);
+        this.price = price;
         this.id = id;
     }
 
@@ -72,14 +60,6 @@ public class Food {
     public void setDiscount(double discount) {
         this.discount = discount;
         setPrice(price);
-    }
-
-    public Store getCurrentStore() {
-        return currentStore;
-    }
-
-    public void setCurrentStore(Store currentStore) {
-        this.currentStore = currentStore;
     }
 
     public int getId() {
