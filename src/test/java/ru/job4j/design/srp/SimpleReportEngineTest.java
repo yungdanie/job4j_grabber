@@ -30,7 +30,7 @@ public class SimpleReportEngineTest {
                 .append(DATE_FORMAT.format(worker.getFired().getTime())).append(";")
                 .append(worker.getSalary()).append(";")
                 .append(System.lineSeparator());
-        assertThat(engine.generate(em -> true), is(expect.toString()));
+        assertThat(expect.toString(), is(engine.generate(em -> true)));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class SimpleReportEngineTest {
                     </body>
                 </html>
                 """, time, time, time, time);
-        assertThat(engine.generate(em -> true), is(expect));
+        assertThat(expect, is(engine.generate(em -> true)));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class SimpleReportEngineTest {
                 Ivan;100.0;\r
                 Vanya;50.0;\r
                 """;
-        assertThat(engine.generate(em -> true), is(expect));
+        assertThat(expect, is(engine.generate(em -> true)));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class SimpleReportEngineTest {
                     Ivan;%1$s;%1$s;2.0;\r
                     Jenya;%1$s;%1$s;3.0;\r
                     """, time);
-        assertThat(engine.generate(em -> true), is(expect));
+        assertThat(expect, is(engine.generate(em -> true)));
     }
 
 
@@ -163,7 +163,7 @@ public class SimpleReportEngineTest {
                     "salary": 165.0
                   }
                 ]""";
-        assertThat(engine.generate(em -> true), is(expect));
+        assertThat(expect, is(engine.generate(em -> true)));
     }
 
     @Test
@@ -193,6 +193,6 @@ public class SimpleReportEngineTest {
                     </employees>
                 </List>
                 """, time);
-        assertThat(engine.generate(em -> true), is(expect));
+        assertThat(expect, is(engine.generate(em -> true)));
     }
 }
