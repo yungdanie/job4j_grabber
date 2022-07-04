@@ -113,26 +113,56 @@ public class SimpleReportEngineTest {
     public void whenJsonDocumentGenerated() {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
+        now.set(2022, Calendar.AUGUST, 4, 16, 4, 12);
         String time = DATE_FORMAT.format(now.getTime());
         Employee worker1 = new Employee("Ivan", now, now, 110);
         Employee worker2 = new Employee("Jenya", now, now, 165);
         store.add(worker1);
         store.add(worker2);
         Report engine = new JSONReportEngine(store);
-        String expect = String.format("""
-                {
-                  "name": "Ivan",
-                  "hired": "%1$s",
-                  "fired": "%1$s",
-                  "salary": 110.0
-                }
-                {
-                  "name": "Jenya",
-                  "hired": "%1$s",
-                  "fired": "%1$s",
-                  "salary": 165.0
-                }
-                    """, time);
+        String expect = """
+                [
+                  {
+                    "name": "Ivan",
+                    "hired": {
+                      "year": 2022,
+                      "month": 7,
+                      "dayOfMonth": 4,
+                      "hourOfDay": 16,
+                      "minute": 4,
+                      "second": 12
+                    },
+                    "fired": {
+                      "year": 2022,
+                      "month": 7,
+                      "dayOfMonth": 4,
+                      "hourOfDay": 16,
+                      "minute": 4,
+                      "second": 12
+                    },
+                    "salary": 110.0
+                  },
+                  {
+                    "name": "Jenya",
+                    "hired": {
+                      "year": 2022,
+                      "month": 7,
+                      "dayOfMonth": 4,
+                      "hourOfDay": 16,
+                      "minute": 4,
+                      "second": 12
+                    },
+                    "fired": {
+                      "year": 2022,
+                      "month": 7,
+                      "dayOfMonth": 4,
+                      "hourOfDay": 16,
+                      "minute": 4,
+                      "second": 12
+                    },
+                    "salary": 165.0
+                  }
+                ]""";
         assertThat(engine.generate(em -> true), is(expect));
     }
 
