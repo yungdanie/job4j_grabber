@@ -4,9 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Park implements AbstractPark {
-    List<Car> ligthCarList = new ArrayList<>();
-    List<Car> truckCarList = new ArrayList<>();
+    List<Car> ligthCarList;
+    List<Car> truckCarList;
 
+
+    public Park(int lightCarSize, int truckCarSize) {
+        ligthCarList = new ArrayList<>(lightCarSize);
+        truckCarList = new ArrayList<>(truckCarSize);
+    }
 
     @Override
     public boolean addCar(Car car) {
