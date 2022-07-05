@@ -2,14 +2,15 @@ package ru.job4j.design.park;
 
 public class TruckCar implements Car {
 
-    private int size;
-    private int id;
+    private final int size;
+    private final int id;
 
 
     public TruckCar(int id, int size) {
-        if (size > Car.ONE) {
-            this.size = size;
+        if (size <= 1) {
+            throw new IllegalArgumentException();
         }
+        this.size = size;
         this.id = id;
     }
 

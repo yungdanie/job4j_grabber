@@ -7,5 +7,7 @@ public interface AbstractPark {
 
     boolean validateTruckCar(Car car);
 
+    boolean validateTruckCarOnLightPlace(Car car);
+
     Car getCar(int id);
 }

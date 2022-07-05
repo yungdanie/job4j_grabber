@@ -4,28 +4,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Park implements AbstractPark {
-    List<Car> ligthCarList;
+    List<Car> lightCarList;
     List<Car> truckCarList;
 
-    private final int ligthSize;
-    private final int truckSize;
+    private final int lightCapacity;
+    private final int truckCapacity;
+
+    private int lightSize = 0;
+    private int truckSize = 0;
 
 
     public Park(int lightCarSize, int truckCarSize) {
-        ligthCarList = new ArrayList<>();
-        truckCarList = new ArrayList<>();
-        this.ligthSize = lightCarSize;
-        this.truckSize = truckCarSize;
+        lightCarList = new ArrayList<>(lightCarSize);
+        truckCarList = new ArrayList<>(truckCarSize);
+        this.lightCapacity = lightCarSize;
+        this.truckCapacity = truckCarSize;
     }
 
     @Override
     public boolean addCar(Car car) {
         boolean res = false;
         if (validateLightCar(car)) {
-            ligthCarList.add(car);
+            lightCarList.add(car);
+            lightSize++;
             res = true;
         } else if (validateTruckCar(car)) {
             truckCarList.add(car);
+            truckSize++;
+            res = true;
+        } else if (validateTruckCarOnLightPlace(car)) {
+            lightCarList.add(car);
+            lightSize += car.getSize();
             res = true;
         }
         return res;
@@ -33,22 +42,25 @@ public class Park implements AbstractPark {
 
     @Override
     public boolean validateLightCar(Car car) {
-        return car.getSize() == 1 && ligthSize > ligthCarList.size();
+        return car.getSize() == 1 && lightCapacity > lightSize;
     }
 
     @Override
     public boolean validateTruckCar(Car car) {
         return car.getSize() > 1
-                && car.getSize() != 0
-                && truckSize >= truckCarList.size()
-                && truckSize >= car.getSize();
+                && truckCapacity > truckSize;
+    }
+
+    @Override
+    public boolean validateTruckCarOnLightPlace(Car car) {
+        return lightCapacity - lightSize >= car.getSize();
     }
 
 
     @Override
     public Car getCar(int id) {
         Car res = null;
-        for (Car car : ligthCarList) {
+        for (Car car : lightCarList) {
             if (car.getId() == id) {
                 res = car;
             }
