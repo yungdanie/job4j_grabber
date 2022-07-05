@@ -26,6 +26,7 @@ public class GCUsage {
         for (int i = 0; i < 10000; i++) {
             new User("А", "Б", i);
             System.out.println(ENVIRONMENT.totalMemory() - ENVIRONMENT.freeMemory() - usedMemoryBefore);
+            Thread.sleep(1500);
         }
         info();
     }
