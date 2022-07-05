@@ -2,6 +2,7 @@ package ru.job4j.design.storage;
 
 import java.util.*;
 
+
 public class Shop implements Store {
 
     private final Map<Integer, Food> foodMap = new HashMap<>();
@@ -42,5 +43,10 @@ public class Shop implements Store {
             res = true;
         }
         return res;
+    }
+
+    @Override
+    public void clearStore() {
+        foodMap.clear();
     }
 }

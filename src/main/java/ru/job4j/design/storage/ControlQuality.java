@@ -25,4 +25,13 @@ public class ControlQuality {
     public List<Store> getStoreList() {
         return new ArrayList<>(storeList);
     }
+
+    public void resort() {
+        List<Food> storage = new ArrayList<>();
+        for (Store store : getStoreList()) {
+            storage.addAll(store.getAll());
+            store.clearStore();
+        }
+        validator(storage);
+    }
 }

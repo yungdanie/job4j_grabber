@@ -17,4 +17,6 @@ public interface Store {
     boolean add(Food food);
 
     boolean validate(Food food);
+
+    void clearStore();
 }

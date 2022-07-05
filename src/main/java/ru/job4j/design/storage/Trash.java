@@ -31,4 +31,9 @@ public class Trash implements Store {
         boolean res = getPercentLifeExpired(food) < 0;
         return res;
     }
+
+    @Override
+    public void clearStore() {
+        foodMap.clear();
+    }
 }

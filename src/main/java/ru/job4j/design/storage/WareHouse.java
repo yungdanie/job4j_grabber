@@ -38,4 +38,9 @@ public class WareHouse implements Store {
         }
         return res;
     }
+
+    @Override
+    public void clearStore() {
+        foodMap.clear();
+    }
 }
