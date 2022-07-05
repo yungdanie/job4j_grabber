@@ -32,8 +32,8 @@ public class WareHouse implements Store {
     @Override
     public boolean validate(Food food) {
         boolean res = false;
-        double a = getPercentLifeExpired(food);
-        if (a > SEVENTY_FIVE_PERCENTS) {
+        double percentLifeExpired = getPercentLifeExpired(food);
+        if (percentLifeExpired > SEVENTY_FIVE_PERCENTS) {
             res = true;
         }
         return res;
