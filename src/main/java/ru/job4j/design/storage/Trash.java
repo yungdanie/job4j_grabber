@@ -28,8 +28,7 @@ public class Trash implements Store {
 
     @Override
     public boolean validate(Food food) {
-        boolean res = getPercentLifeExpired(food) < 0;
-        return res;
+        return getPercentLifeExpired(food) < StaticNumbers.ZERO_PERCENTS;
     }
 
     @Override

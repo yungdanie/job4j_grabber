@@ -6,11 +6,6 @@ import java.util.*;
 public class Shop implements Store {
 
     private final Map<Integer, Food> foodMap = new HashMap<>();
-    private final static double ZERO_PERCENTS = 0;
-    private final static double SEVENTY_FIVE_PERCENTS = 0.75;
-    private final static double TWENTY_FIVE_PERCENTS = 0.25;
-
-    private final static double ONE_HUNDRED_PERCENTS = 1;
 
     @Override
     public Food get(int id) {
@@ -26,8 +21,8 @@ public class Shop implements Store {
     public boolean add(Food food) {
         boolean res = false;
         if (validate(food)) {
-            if (getPercentLifeExpired(food) < TWENTY_FIVE_PERCENTS) {
-                food.setDiscount(TWENTY_FIVE_PERCENTS);
+            if (getPercentLifeExpired(food) < StaticNumbers.TWENTY_FIVE_PERCENTS) {
+                food.setDiscount(StaticNumbers.TWENTY_FIVE_PERCENTS);
             }
             foodMap.put(food.getId(), food);
             res = true;
@@ -39,7 +34,7 @@ public class Shop implements Store {
     public boolean validate(Food food) {
         boolean res = false;
         double percentLifeExpired = getPercentLifeExpired(food);
-        if (percentLifeExpired >= ZERO_PERCENTS && percentLifeExpired <= SEVENTY_FIVE_PERCENTS) {
+        if (percentLifeExpired >= StaticNumbers.ZERO_PERCENTS && percentLifeExpired <= StaticNumbers.SEVENTY_FIVE_PERCENTS) {
             res = true;
         }
         return res;

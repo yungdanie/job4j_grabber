@@ -6,9 +6,6 @@ public class WareHouse implements Store {
 
     private final Map<Integer, Food> foodMap = new HashMap<>();
 
-    private final static double SEVENTY_FIVE_PERCENTS = 0.75;
-
-
     @Override
     public Food get(int id) {
         return foodMap.getOrDefault(id, null);
@@ -33,7 +30,7 @@ public class WareHouse implements Store {
     public boolean validate(Food food) {
         boolean res = false;
         double percentLifeExpired = getPercentLifeExpired(food);
-        if (percentLifeExpired > SEVENTY_FIVE_PERCENTS) {
+        if (percentLifeExpired > StaticNumbers.SEVENTY_FIVE_PERCENTS) {
             res = true;
         }
         return res;
