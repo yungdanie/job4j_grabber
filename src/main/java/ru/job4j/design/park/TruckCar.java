@@ -7,7 +7,7 @@ public class TruckCar implements Car {
 
 
     public TruckCar(int id, int size) {
-        if (size <= 1) {
+        if (size <= LightCar.ONE) {
             throw new IllegalArgumentException();
         }
         this.size = size;
