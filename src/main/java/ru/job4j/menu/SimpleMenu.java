@@ -9,43 +9,37 @@ public class SimpleMenu implements Menu {
     @Override
     public boolean add(String parentName, String childName, ActionDelegate actionDelegate) {
         boolean result = false;
-        if (Objects.equals(parentName, Menu.ROOT)) {
-            rootElements.add(new SimpleMenuItem(childName, actionDelegate));
-            result = true;
-        }
-        MenuItem parent = findItem(parentName);
-        if (parent != null) {
-            parent.getChildren().add(new SimpleMenuItem(childName, actionDelegate));
-            result = true;
+        if (findItem(childName).isEmpty()) {
+            if (Objects.equals(parentName, Menu.ROOT)) {
+                rootElements.add(new SimpleMenuItem(childName, actionDelegate));
+                result = true;
+            }
+            Optional<ItemInfo> parent = findItem(parentName);
+            if (parent.isPresent()) {
+                parent.get().menuItem.getChildren().add(new SimpleMenuItem(childName, actionDelegate));
+                result = true;
+            }
         }
         return result;
     }
 
-    private MenuItem findItem(String name) {
+    private Optional<ItemInfo> findItem(String name) {
         DFSIterator iterator = new DFSIterator();
-        MenuItem result = null;
+        Optional<ItemInfo> result = Optional.empty();
         while (iterator.hasNext()) {
-            MenuItem current = iterator.next().menuItem;
-            if (current.getName().equals(name)) {
-                result = current;
+            ItemInfo current = iterator.next();
+            if (current.menuItem.getName().equals(name)) {
+                result = Optional.of(current);
                 break;
             }
         }
         return result;
     }
+
 
     @Override
     public Optional<MenuItemInfo> select(String itemName) {
-        DFSIterator iterator = new DFSIterator();
-        Optional<MenuItemInfo> result = Optional.empty();
-        while (iterator.hasNext()) {
-            ItemInfo itemInfo = iterator.next();
-            if (itemInfo.menuItem.getName().equals(itemName)) {
-                result = Optional.of(new MenuItemInfo(itemInfo.menuItem, itemInfo.number));
-                break;
-            }
-        }
-        return result;
+        return findItem(itemName).map(x -> new MenuItemInfo(x.menuItem, x.number));
     }
 
     @Override
@@ -60,9 +54,6 @@ public class SimpleMenu implements Menu {
 
             @Override
             public MenuItemInfo next() {
-                if (!hasNext()) {
-                    throw new NoSuchElementException();
-                }
                 ItemInfo itemInfo = iterator.next();
                 return new MenuItemInfo(itemInfo.menuItem, itemInfo.number);
             }
